@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>PokeDex</title>
+</head>
+<body>
+    <header>
+        <h1>Pokedex</h1>
+    </header>
+    <main class="container">
+        <input type="number" id="quant" placeholder="Quantidade de Pokemons">
+        <div class="pokemon-boxes"></div> 
+        
+    </main>
+    <script>
+
+       let click = document.querySelector('#quant');
+       const pokemonBoxes = document.querySelector('.pokemon-boxes');
+
+        click.addEventListener('keyup', ()=>{
+            pokemonBoxes.innerHTML = ''
+            fetch('https://pokeapi.co/api/v2/pokemon?limit=' + click.value)
+            .then(Response => Response.json())
+            .then(allPokemon => {
+
+            if(allPokemon.results.length > 0){
+               
+                pokeImg=[]
+                
+                allPokemon.results.map(val=>{
+                    fetch(val.url)
+                    .then(Response => Response.json())
+                    .then(poke => {
+                        pokeImg = poke.sprites.front_default
+                        pokemonBoxes.innerHTML += `
+                        <div class="pokemon-box">
+                        <img src=${pokeImg} >
+                        <p>${val.name}</p> 
+                        `
+                       
+                    })
+                })
+            }
+           })
+       })
+    </script>
+</body>
+</html>
