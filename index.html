@@ -15,37 +15,43 @@
         <div class="pokemon-boxes"></div> 
         
     </main>
+    
     <script>
+        let click = document.querySelector('#quant');
+        const pokemonBoxes = document.querySelector('.pokemon-boxes');
+        const pokemonBox = document.querySelectorAll('.pokemon-box');
 
-       let click = document.querySelector('#quant');
-       const pokemonBoxes = document.querySelector('.pokemon-boxes');
-
-        click.addEventListener('keyup', ()=>{
-            pokemonBoxes.innerHTML = ''
-            fetch('https://pokeapi.co/api/v2/pokemon?limit=' + click.value)
+        click.addEventListener('keyup', (e)=>{
+            pokedex(e.target.value)
+       })
+       function pokedex(quant){
+        pokemonBoxes.innerHTML = ''
+            fetch('https://pokeapi.co/api/v2/pokemon?limit=' + quant)
             .then(Response => Response.json())
             .then(allPokemon => {
 
-            if(allPokemon.results.length > 0){
+            if(allPokemon.results.length == quant){
                
                 pokeImg=[]
-                
+                pokeImgBack=[]
                 allPokemon.results.map(val=>{
                     fetch(val.url)
                     .then(Response => Response.json())
                     .then(poke => {
+                        
                         pokeImg = poke.sprites.front_default
                         pokemonBoxes.innerHTML += `
                         <div class="pokemon-box">
                         <img src=${pokeImg} >
                         <p>${val.name}</p> 
                         `
-                       
+   
                     })
-                })
+                }) 
             }
            })
-       })
+       }
+       pokedex(3)
     </script>
 </body>
 </html>
